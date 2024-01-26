@@ -65,7 +65,7 @@
             <div class="row justify-content-center">
               <!-- link to paper -->
               <div style="margin: 5px;">
-                <p class="mb-5"><a class="btn btn-large btn-dark" href="https://arxiv.org/abs/2401.xxxxx" role="button" target="_blank">
+                <p class="mb-5"><a class="btn btn-large btn-dark" href="https://arxiv.org/abs/2401.14321" role="button" target="_blank">
                 <i class="fa fa-file"></i>
                 Paper
                 </a> </p>
@@ -434,15 +434,72 @@
 			</tr>
 
 
+		</table>
 
 
 
 
+
+
+
+		<div class="col-12 text-center">
+          <h3>IV. Lengthy speech generation</h3>
+          <hr style="margin-top:0px">
+        </div>
+
+		<table class="table">
+            <tr><td scope="col" colspan="2"><span style="color:#a16c6e">Prompt: [6829_68771_000046_000000] A sudden wave of scarlet swept over Eliza's face.</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt/6829_68771_000046_000000.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="3"><span style="color:#4C72B0">Zero-shot TTS: The gardens and grounds were gaily decorated with Chinese and Japanese lanterns, streamers and Forbes banners. For the first time the maid seemed a little confused, and her gaze wandered from the face of her visitor. She sat down in a rocking chair, and clasping her hands in her lap, rocked slowly back and forth. Her manner was neither independent nor assertive, but rather one of well bred composure and calm reliance. Beth felt that she was intruding and knew that she ought to go; yet some fascination held her to the spot.</span></td></tr>
+			<tr>
+				<td>Ground-truth</td>
+				<td>VALL-E</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/gt_long/test_b_long_cat5_0063.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle_long/test_b_long_cat5_0063.wav" controls=""></audio></td>
+			</tr>
+			<tr>
+				<td>VALL-T, w/o aligned context window</td>
+				<td>VALL-T, w/ aligned context window</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/vallt_long/test_b_long_cat5_0063.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt_long_window/test_b_long_cat5_0063.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+
+
+            <tr><td scope="col" colspan="2"><span style="color:#a16c6e">Prompt: [1320_122617_000033_000000] "Cut his bands," said Hawkeye to David, who just then approached them.</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt/1320_122617_000033_000000.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="3"><span style="color:#4C72B0">Zero-shot TTS: "If you find a man there, he shall die a flea's death." --Merry Wives of Windsor. At last the scout spoke in English, and at once explained the embarrassment of their situation. A circle of a few hundred feet in circumference was drawn, and each of the party took a segment for his portion. "Such cunning is not without its deviltry," exclaimed Hawkeye, when he met the disappointed looks of his assistants. The whole party now proceeded, following the course of the rill, keeping anxious eyes on the regular impressions.</span></td></tr>
+			<tr>
+				<td>Ground-truth</td>
+				<td>VALL-E</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/gt_long/test_b_long_cat5_0008.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle_long/test_b_long_cat5_0008.wav" controls=""></audio></td>
+			</tr>
+			<tr>
+				<td>VALL-T, w/o aligned context window</td>
+				<td>VALL-T, w/ aligned context window</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/vallt_long/test_b_long_cat5_0008.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt_long_window/test_b_long_cat5_0008.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
 
 
 
 		</table>
-
 
       </div>
     </div>
