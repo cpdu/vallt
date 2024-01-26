@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    VALL-T Demo
+  </title>
+
+  <!-- bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <!-- icon -->
+  <script src="https://kit.fontawesome.com/87dc3e863a.js" crossorigin="anonymous"></script>
+  <!-- font -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+  <style>
+    body {
+      background: rgb(255, 255, 255) no-repeat fixed top left;
+      font-family:'Open Sans', sans-serif;
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- cover -->
+  <section>
+    <div class="jumbotron text-center mt-0" style="padding-bottom: 0px;">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col">
+            <!-- paper title -->
+            <h2 style="font-size:30px;">
+                VALL-T: Decoder-Only Generative Transducer for Robust and Decoding-Controllable Text-to-Speech
+            </h2>
+
+            <hr>
+
+            <!-- authors -->
+            <h6>Chenpeng Du<sup>*1</sup>,
+            Yiwei Guo<sup>*1</sup>,
+			Hankun Wang<sup>*1</sup>,
+			Yifan Yang<sup>1</sup>,
+			Zhikang Niu<sup>1</sup>,
+			Shuai Wang<sup>2</sup>,
+			Hui Zhang<sup>3</sup>,
+			Xie Chen<sup>1</sup>,
+			Kai Yu<sup>1</sup>
+                 <br>
+                 <br>
+             <p> <sup>1</sup> MoE Key Lab of Artificial Intelligence, AI Institute <br>
+		X-LANCE Lab, Department of Computer Science and Engineering, Shanghai Jiao Tong University, Shanghai, China <br>
+                <sup>2</sup> Shenzhen Research Institute of Big Data, Shenzhen, China <br>
+                <sup>3</sup> AISpeech Ltd, Beijing, China
+            </p>
+
+
+            <!-- links -->
+            <div class="row justify-content-center">
+              <!-- link to paper -->
+              <div style="margin: 5px;">
+                <p class="mb-5"><a class="btn btn-large btn-dark" href="https://arxiv.org/abs/2401.xxxxx" role="button" target="_blank">
+                <i class="fa fa-file"></i>
+                Paper
+                </a> </p>
+              </div>
+            <div style="margin: 5px;">
+                <p class="mb-5"><a class="btn btn-large btn-dark" href="https://github.com/cpdu/vallt" role="button" target="_blank">
+                <i class="fa fa-file"></i>
+                Code
+                </a> </p>
+             </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- abstract -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h3>Abstract</h3>
+          <hr style="margin-top:0px">
+        </div>
+          <p class="text-justify">
+            Recent TTS models with decoder-only Transformer architecture, such as SPEAR-TTS and VALL-E, achieve impressive naturalness and demonstrate the ability for zero-shot adaptation given a speech prompt. However, such decoder-only TTS models lack monotonic alignment constraints, sometimes leading to hallucination issues such as mispronunciation, word skipping and difficulty in stopping. To address this limitation, we propose VALL-T, a generative Transducer model that introduces shifting relative position embeddings for input phoneme sequence, explicitly indicating the monotonic generation process while maintaining the architecture of decoder-only Transformer. Consequently, VALL-T retains the capability of prompt-based zero-shot adaptation and demonstrates better robustness against hallucinations with a relative reduction of 28.3% in the word error rate. Furthermore, the controllability of alignment in VALL-T during decoding facilitates the use of untranscribed speech prompts, even in unknown languages. It also enables the synthesis of lengthy speech by utilizing an aligned context window.
+		  </p>
+      </div>
+    </div>
+  </section>
+  <br>
+  <br>
+
+
+  <!-- demo -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h3>I. Zero-shot TTS</h3>
+          <hr style="margin-top:0px">
+        </div>
+
+		<table class="table">
+            <tr><td scope="col" colspan="3"><span style="color:#a16c6e">Prompt: [1188_133604_000026_000001] I say, "whether color be gay or sad." </span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt/1188_133604_000026_000001.wav" controls=""></audio></td>
+				<td></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="3"><span style="color:#4C72B0">Zero-shot TTS: [1188_133604_000061_000006] It has no beauty whatsoever, no specialty of picturesqueness; and all its lines are cramped and poor.</span></td></tr>
+			<tr>
+				<td align="center">Ground-truth</td>
+				<td align="center">Encodec resynthesis</td>
+				<td align="center">NAR resynthesis</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/gt/1188_133604_000061_000006.wav" controls=""></audio></td>
+				<td><audio src="./resources/encodec_resyn/1188_133604_000061_000006.wav" controls=""></audio></td>
+				<td><audio src="./resources/nar_resyn/1188_133604_000061_000006.wav" controls=""></audio></td>
+			</tr>
+			<tr>
+				<td align="center">Transduce and Speak</td>
+				<td align="center">VALL-E</td>
+				<td align="center">VALL-T</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/transduce_and_speak/1188_133604_000061_000006.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle/1188_133604_000061_000006.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt/1188_133604_000061_000006.wav" controls=""></audio></td>
+			</tr>
+
+
+            <tr><td scope="col" colspan="3"><span style="color:#a16c6e">Prompt: [1995_1837_000020_000000] Up in the sick room Zora lay on the little white bed.</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt/1995_1837_000020_000000.wav" controls=""></audio></td>
+				<td></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="3"><span style="color:#4C72B0">Zero-shot TTS: [1995_1836_000003_000002] At last the Cotton Combine was to all appearances an assured fact and he was slated for the Senate.</span></td></tr>
+			<tr>
+				<td align="center">Ground-truth</td>
+				<td align="center">Encodec resynthesis</td>
+				<td align="center">NAR resynthesis</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/gt/1995_1836_000003_000002.wav" controls=""></audio></td>
+				<td><audio src="./resources/encodec_resyn/1995_1836_000003_000002.wav" controls=""></audio></td>
+				<td><audio src="./resources/nar_resyn/1995_1836_000003_000002.wav" controls=""></audio></td>
+			</tr>
+			<tr>
+				<td align="center">Transduce and Speak</td>
+				<td align="center">VALL-E</td>
+				<td align="center">VALL-T</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/transduce_and_speak/1995_1836_000003_000002.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle/1995_1836_000003_000002.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt/1995_1836_000003_000002.wav" controls=""></audio></td>
+			</tr>
+
+
+
+            <tr><td scope="col" colspan="3"><span style="color:#a16c6e">Prompt: [2300_131720_000016_000004] The electrical work had to be done in forty eight hours!</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt/2300_131720_000016_000004.wav" controls=""></audio></td>
+				<td></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="3"><span style="color:#4C72B0">Zero-shot TTS: [2300_131720_000006_000001] Every department of mechanics was stimulated and benefited to an extraordinary degree.</span></td></tr>
+			<tr>
+				<td align="center">Ground-truth</td>
+				<td align="center">Encodec resynthesis</td>
+				<td align="center">NAR resynthesis</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/gt/2300_131720_000006_000001.wav" controls=""></audio></td>
+				<td><audio src="./resources/encodec_resyn/2300_131720_000006_000001.wav" controls=""></audio></td>
+				<td><audio src="./resources/nar_resyn/2300_131720_000006_000001.wav" controls=""></audio></td>
+			</tr>
+			<tr>
+				<td align="center">Transduce and Speak</td>
+				<td align="center">VALL-E</td>
+				<td align="center">VALL-T</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/transduce_and_speak/2300_131720_000006_000001.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle/2300_131720_000006_000001.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt/2300_131720_000006_000001.wav" controls=""></audio></td>
+			</tr>
+
+
+
+
+            <tr><td scope="col" colspan="3"><span style="color:#a16c6e">Prompt: [4446_2271_000011_000001] "And have I done anything so fool as that, now?" he asked.</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt/4446_2271_000011_000001.wav" controls=""></audio></td>
+				<td></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="3"><span style="color:#4C72B0">Zero-shot TTS: [4446_2271_000022_000010] I should torture myself-I couldn't help it." After that it was easy to forget, actually to forget.</span></td></tr>
+			<tr>
+				<td align="center">Ground-truth</td>
+				<td align="center">Encodec resynthesis</td>
+				<td align="center">NAR resynthesis</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/gt/4446_2271_000022_000010.wav" controls=""></audio></td>
+				<td><audio src="./resources/encodec_resyn/4446_2271_000022_000010.wav" controls=""></audio></td>
+				<td><audio src="./resources/nar_resyn/4446_2271_000022_000010.wav" controls=""></audio></td>
+			</tr>
+			<tr>
+				<td align="center">Transduce and Speak</td>
+				<td align="center">VALL-E (Bad case, repeating)</td>
+				<td align="center">VALL-T</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/transduce_and_speak/4446_2271_000022_000010.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle/4446_2271_000022_000010.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt/4446_2271_000022_000010.wav" controls=""></audio></td>
+			</tr>
+
+		</table>
+
+
+        <div class="col-12 text-center">
+          <h3>II. Zero-shot TTS with untranscribed speech prompts</h3>
+          <hr style="margin-top:0px">
+        </div>
+
+		<table class="table">
+            <tr><td scope="col" colspan="3"><span style="color:#a16c6e">Prompt: [5683_32866_000047_000003, no transcription available]</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt/5683_32866_000047_000003.wav" controls=""></audio></td>
+				<td></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="3"><span style="color:#4C72B0">Zero-shot TTS: [5683_32866_000028_000000] 'It is very happy, for her at least, they are not,' said Rachel, and a long silence ensued.</span></td></tr>
+			<tr>
+				<td align="center">Ground-truth</td>
+				<td align="center">VALL-E, w/o pseudo prompt transcription</td>
+				<td align="center">VALL-E, w/ pseudo prompt transcription</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/gt/5683_32866_000028_000000.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle_no_pt/5683_32866_000028_000000.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle_psuedo_pt/5683_32866_000028_000000.wav" controls=""></audio></td>
+			</tr>
+			<tr>
+				<td align="center">VALL-T, w/o pseudo prompt transcription</td>
+				<td align="center">VALL-T, w/ pseudo prompt transcription</td>
+				<td align="center"></td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/vallt_no_pt/5683_32866_000028_000000.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt_psuedo_pt/5683_32866_000028_000000.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+
+
+
+            <tr><td scope="col" colspan="3"><span style="color:#a16c6e">Prompt: [2830_3980_000018_000001, no transcription available]</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt/2830_3980_000018_000001.wav" controls=""></audio></td>
+				<td></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="3"><span style="color:#4C72B0">Zero-shot TTS: [2830_3980_000018_000002] He reminds them of the time when he opposed peter to his face and reproved the chief of the apostles.</span></td></tr>
+			<tr>
+				<td align="center">Ground-truth</td>
+				<td align="center">VALL-E, w/o pseudo prompt transcription</td>
+				<td align="center">VALL-E, w/ pseudo prompt transcription</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/gt/2830_3980_000018_000002.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle_no_pt/2830_3980_000018_000002.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle_psuedo_pt/2830_3980_000018_000002.wav" controls=""></audio></td>
+			</tr>
+			<tr>
+				<td align="center">VALL-T, w/o pseudo prompt transcription</td>
+				<td align="center">VALL-T, w/ pseudo prompt transcription</td>
+				<td align="center"></td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/vallt_no_pt/2830_3980_000018_000002.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt_psuedo_pt/2830_3980_000018_000002.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+
+
+            <tr><td scope="col" colspan="3"><span style="color:#a16c6e">Prompt: [6829_68771_000046_000000, no transcription available]</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt/6829_68771_000046_000000.wav" controls=""></audio></td>
+				<td></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="3"><span style="color:#4C72B0">Zero-shot TTS: [6829_68769_000051_000002] Then Rogers wouldn't do anything but lead her around, and wait upon her, and the place went to rack and ruin."</span></td></tr>
+			<tr>
+				<td align="center">Ground-truth</td>
+				<td align="center">VALL-E, w/o pseudo prompt transcription</td>
+				<td align="center">VALL-E, w/ pseudo prompt transcription</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/gt/6829_68769_000051_000002.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle_no_pt/6829_68769_000051_000002.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle_psuedo_pt/6829_68769_000051_000002.wav" controls=""></audio></td>
+			</tr>
+			<tr>
+				<td align="center">VALL-T, w/o pseudo prompt transcription</td>
+				<td align="center">VALL-T, w/ pseudo prompt transcription</td>
+				<td align="center"></td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/vallt_no_pt/6829_68769_000051_000002.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt_psuedo_pt/6829_68769_000051_000002.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+
+
+            <tr><td scope="col" colspan="3"><span style="color:#a16c6e">Prompt: [7176_92135_000083_000005, no transcription available]</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt/7176_92135_000083_000005.wav" controls=""></audio></td>
+				<td></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="3"><span style="color:#4C72B0">Zero-shot TTS: [7176_88083_000012_000005] The cat growled softly, picked up the prize in her jaws and trotted into the bushes to devour it.</span></td></tr>
+			<tr>
+				<td align="center">Ground-truth</td>
+				<td align="center">VALL-E, w/o pseudo prompt transcription</td>
+				<td align="center">VALL-E, w/ pseudo prompt transcription</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/gt/7176_88083_000012_000005.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle_no_pt/7176_88083_000012_000005.wav" controls=""></audio></td>
+				<td><audio src="./resources/valle_psuedo_pt/7176_88083_000012_000005.wav" controls=""></audio></td>
+			</tr>
+			<tr>
+				<td align="center">VALL-T, w/o pseudo prompt transcription</td>
+				<td align="center">VALL-T, w/ pseudo prompt transcription</td>
+				<td align="center"></td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/vallt_no_pt/7176_88083_000012_000005.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt_psuedo_pt/7176_88083_000012_000005.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+		</table>
+
+		<div class="col-12 text-center">
+          <h3>III. Zero-shot TTS with untranscribed speech prompts in unknown languages</h3>
+          <hr style="margin-top:0px">
+        </div>
+
+		<table class="table">
+            <tr><td scope="col" colspan="2"><span style="color:#a16c6e">Prompt: [In German, no transcription available]</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt_multilingual/3052_2124_000074.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="2"><span style="color:#4C72B0">Zero-shot TTS: [237_134493_000007_000000] When he had been mowing the better part of an hour, he heard the rattle of a light cart on the road behind him.</span></td></tr>
+			<tr>
+				<td>VALL-E, w/ pseudo prompt transcription</td>
+				<td>VALL-T, w/ pseudo prompt transcription</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/valle_multilingual/237_134493_000007_000000.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt_multilingual/237_134493_000007_000000.wav" controls=""></audio></td>
+			</tr>
+
+
+
+
+            <tr><td scope="col" colspan="2"><span style="color:#a16c6e">Prompt: [In German, no transcription available]</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt_multilingual/7624_6902_000011.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="2"><span style="color:#4C72B0">Zero-shot TTS: [260_123286_000005_000001] He examines the horizon all round with his glass, and folds his arms with the air of an injured man.</span></td></tr>
+			<tr>
+				<td>VALL-E, w/ pseudo prompt transcription</td>
+				<td>VALL-T, w/ pseudo prompt transcription</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/valle_multilingual/260_123286_000005_000001.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt_multilingual/260_123286_000005_000001.wav" controls=""></audio></td>
+			</tr>
+
+
+
+            <tr><td scope="col" colspan="2"><span style="color:#a16c6e">Prompt: [In Spanish, no transcription available]</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt_multilingual/11168_11957_000017.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="2"><span style="color:#4C72B0">Zero-shot TTS: [4970_29095_000054_000000] ruth did not reply directly; she complained that her mother didn't understand her.</span></td></tr>
+			<tr>
+				<td>VALL-E, w/ pseudo prompt transcription</td>
+				<td>VALL-T, w/ pseudo prompt transcription</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/valle_multilingual/4970_29095_000054_000000.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt_multilingual/4970_29095_000054_000000.wav" controls=""></audio></td>
+			</tr>
+
+
+
+
+
+
+            <tr><td scope="col" colspan="2"><span style="color:#a16c6e">Prompt: [In Spanish, no transcription available]</span></td></tr>
+			<tr>
+				<td><audio src="./resources/prompt_multilingual/5870_4006_000005.wav" controls=""></audio></td>
+				<td></td>
+			</tr>
+            <tr><td scope="col" colspan="2"><span style="color:#4C72B0">Zero-shot TTS: [7729_102255_000028_000008] Their assumed character changed with their changing opportunities or necessities.</span></td></tr>
+			<tr>
+				<td>VALL-E, w/ pseudo prompt transcription</td>
+				<td>VALL-T, w/ pseudo prompt transcription</td>
+			</tr>
+			<tr>
+				<td><audio src="./resources/valle_multilingual/7729_102255_000028_000008.wav" controls=""></audio></td>
+				<td><audio src="./resources/vallt_multilingual/7729_102255_000028_000008.wav" controls=""></audio></td>
+			</tr>
+
+
+
+
+
+
+
+
+
+		</table>
+
+
+      </div>
+    </div>
+  </section>
+
+
+  <section>
+    <div class="container">
+      <div class="row">
+          <p class="text-justify">
+            <sup>*</sup> Main contributors.
+		  </p>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
